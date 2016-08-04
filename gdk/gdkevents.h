@@ -142,6 +142,9 @@ typedef struct _GdkEventSetting     GdkEventSetting;
 typedef struct _GdkEventGrabBroken  GdkEventGrabBroken;
 typedef struct _GdkEventTouchpadSwipe GdkEventTouchpadSwipe;
 typedef struct _GdkEventTouchpadPinch GdkEventTouchpadPinch;
+typedef struct _GdkEventPadButton   GdkEventPadButton;
+typedef struct _GdkEventPadAxis     GdkEventPadAxis;
+typedef struct _GdkEventPadGroupMode GdkEventPadGroupMode;
 
 typedef struct _GdkEventSequence    GdkEventSequence;
 
@@ -278,6 +281,16 @@ typedef GdkFilterReturn (*GdkFilterFunc) (GdkXEvent *xevent,
  *   is determined by its phase field. This event type was added in 3.18.
  * @GDK_TOUCHPAD_PINCH: A touchpad pinch gesture event, the current state
  *   is determined by its phase field. This event type was added in 3.18.
+ * @GDK_PAD_BUTTON_PRESS: A tablet pad button press event. This event type
+ *   was added in 3.22.
+ * @GDK_PAD_BUTTON_RELEASE: A tablet pad button release event. This event type
+ *   was added in 3.22.
+ * @GDK_PAD_RING: A tablet pad axis event from a "ring". This event type was
+ *   added in 3.22.
+ * @GDK_PAD_STRIP: A tablet pad axis event from a "strip". This event type was
+ *   added in 3.22.
+ * @GDK_PAD_MODE: A tablet pad group mode change. This event type was added
+ *   in 3.22.
  * @GDK_EVENT_LAST: marks the end of the GdkEventType enumeration. Added in 2.18
  *
  * Specifies the type of the event.
@@ -340,6 +353,11 @@ typedef enum
   GDK_TOUCH_CANCEL      = 40,
   GDK_TOUCHPAD_SWIPE    = 41,
   GDK_TOUCHPAD_PINCH    = 42,
+  GDK_PAD_BUTTON_PRESS  = 43,
+  GDK_PAD_BUTTON_RELEASE = 44,
+  GDK_PAD_RING          = 45,
+  GDK_PAD_STRIP         = 46,
+  GDK_PAD_GROUP_MODE    = 47,
   GDK_EVENT_LAST        /* helper variable for decls */
 } GdkEventType;
 
@@ -1240,6 +1258,36 @@ struct _GdkEventTouchpadPinch {
   guint state;
 };
 
+struct _GdkEventPadButton {
+  GdkEventType type;
+  GdkWindow *window;
+  gint8 send_event;
+  guint32 time;
+  guint group;
+  guint button;
+  guint mode;
+};
+
+struct _GdkEventPadAxis {
+  GdkEventType type;
+  GdkWindow *window;
+  gint8 send_event;
+  guint32 time;
+  guint group;
+  guint index;
+  guint mode;
+  gdouble value;
+};
+
+struct _GdkEventPadGroupMode {
+  GdkEventType type;
+  GdkWindow *window;
+  gint8 send_event;
+  guint32 time;
+  guint group;
+  guint mode;
+};
+
 /**
  * GdkEvent:
  * @type: the #GdkEventType
@@ -1318,6 +1366,9 @@ union _GdkEvent
   GdkEventGrabBroken        grab_broken;
   GdkEventTouchpadSwipe     touchpad_swipe;
   GdkEventTouchpadPinch     touchpad_pinch;
+  GdkEventPadButton         pad_button;
+  GdkEventPadAxis           pad_axis;
+  GdkEventPadGroupMode      pad_group_mode;
 };
 
 GDK_AVAILABLE_IN_ALL
