@@ -4474,3 +4474,21 @@ gdk_wayland_device_get_drop_context (GdkDevice *device)
 
   return GDK_WAYLAND_SEAT (seat)->drop_context;
 }
+
+const gchar *
+gdk_wayland_device_get_node_path (GdkDevice *device)
+{
+  GdkWaylandTabletData *tablet;
+
+  GdkSeat *seat;
+
+  g_return_val_if_fail (GDK_IS_DEVICE (device), NULL);
+
+  seat = gdk_device_get_seat (device);
+  tablet = gdk_wayland_device_manager_find_tablet (GDK_WAYLAND_SEAT (seat),
+                                                   device);
+  if (tablet)
+    return tablet->path;
+
+  return NULL;
+}
