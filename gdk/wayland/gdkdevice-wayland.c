@@ -5166,6 +5166,7 @@ const gchar *
 gdk_wayland_device_get_node_path (GdkDevice *device)
 {
   GdkWaylandTabletData *tablet;
+  GdkWaylandTabletPadData *pad;
 
   GdkSeat *seat;
 
@@ -5176,6 +5177,10 @@ gdk_wayland_device_get_node_path (GdkDevice *device)
                                                    device);
   if (tablet)
     return tablet->path;
+
+  pad = gdk_wayland_device_manager_find_pad (GDK_WAYLAND_SEAT (seat), device);
+  if (pad)
+    return pad->path;
 
   return NULL;
 }
